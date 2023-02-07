@@ -12,9 +12,10 @@ os.environ['FLASK_ENV'] = 'prod'
 os.environ['FLASK_APP'] = 'hsbc'
 
 
-from hsbc import app
+from hsbc import app, bus
 import api
 
 
 if __name__ == '__main__':
+    bus.run()
     app.run(port=5001)

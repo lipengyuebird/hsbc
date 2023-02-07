@@ -4,12 +4,13 @@
 # @Author  : Perye (Pengyu LI)
 # @File    : api.py
 # @Software: PyCharm
+import json
 import sqlite3
 
 from flask import request
 from flask_parameter_validation import ValidateParameters, Route, Json, Query
 
-from hsbc import app
+from hsbc import app, bus
 from error_handler import handle_param_validation
 import util.currencies
 import scraper
@@ -42,3 +43,13 @@ def get_history():
         result['rate'][currency] = [i[0] for i in query_result]
         result['date'][currency] = [i[1] for i in query_result]
     return result
+
+
+@bus.handle('hsbc')
+def update(msg):
+    msg = msg.value.decode('ascii')
+    try:
+        d = json.loads(msg)
+        scraper.clear_cache(d['base_currency'], d['currency'])
+    except:
+        print(msg)
