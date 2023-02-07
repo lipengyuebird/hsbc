@@ -13,7 +13,7 @@ import util.currencies
 from extensions import cache
 
 
-@cache.memoize(timeout=300)
+@cache.memoize(timeout=3600)
 def scrape_exchange_rate_hkd() -> Dict:
     data = json.loads(requests.get(
         'https://rbwm-api.hsbc.com.hk/digital-pws-tools-investments-eapi-prod-proxy/v1/investments/exchange-rate'
@@ -29,7 +29,6 @@ def scrape_exchange_rate_hkd() -> Dict:
 
 
 def clear_cache(base_currency: str, currency: str):
-
     assert base_currency.upper() in util.currencies.allowed_currencies
     assert currency.upper() in util.currencies.allowed_currencies
     cache.delete_memoized(eval('scrape_exchange_rate_' + base_currency.lower()))
